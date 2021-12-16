@@ -5,6 +5,7 @@
 
 import argparse
 import logging
+import sys
 
 def parse_sys_args(argv):
     """Parses commaond-line arguments"""
@@ -29,7 +30,11 @@ def parse_sys_args(argv):
         help="Demo for subparsers argument1")
     parser_sub.set_defaults(func=test_parser_sub)
 
-    return parser.parse_args(argv[1:])
+    if len(sys.argv) == 1:
+        parser.print_help(sys.stderr)
+        sys.exit(1)
+    else:
+        return parser.parse_args(argv[1:])
 
 def test_parser_sub(args):
     logging.info("arg1 is %s" % args.arg1)
