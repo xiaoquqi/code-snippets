@@ -26,9 +26,7 @@ def init_logging(debug=False, verbose=True,
         console.setFormatter(logging.Formatter(fmt=LOG_FORMAT))
         logger.addHandler(console)
     else:
-        # NOTE(Ray): if verbose not given disable console output, this
-        # is a tricky way to implement
-        logger.handlers = []
+        logger.disabled = True
 
     if log_file:
         if not log_path:
