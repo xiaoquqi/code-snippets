@@ -1,0 +1,8 @@
+version: '3.3'
+services:
+  crontab:
+    image: 'crontab:latest'
+    restart: always
+    volumes:
+      - './cron:/var/spool/cron/root'
+      - './period_task.sh:/period_task.sh'
