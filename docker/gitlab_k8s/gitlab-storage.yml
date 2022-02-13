@@ -1,0 +1,104 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-gitlab-config
+  labels:
+    app: gitlab
+spec:
+  storageClassName: nfs-gitlab-config-storageclass
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - hard
+    - nfsvers=4.1    
+  nfs:
+    server: 192.168.10.37
+    path: /MotionGear/DEV_SHARED_NFS/DEV
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gitlab-config
+spec:
+  storageClassName: nfs-gitlab-config-storageclass
+  resources:
+    requests:
+      storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  selector:
+    matchLabels:
+      app: gitlab
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-gitlab-data
+  labels:
+    app: gitlab
+spec:
+  storageClassName: nfs-gitlab-data-storageclass
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - hard
+    - nfsvers=4.1    
+  nfs:
+    server: 192.168.10.37
+    path: /MotionGear/DEV_SHARED_NFS/DEV
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gitlab-data
+spec:
+  storageClassName: nfs-gitlab-data-storageclass
+  resources:
+    requests:
+      storage: 100Gi
+  accessModes:
+    - ReadWriteOnce
+  selector:
+    matchLabels:
+      app: gitlab
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-gitlab-logs
+  labels:
+    app: gitlab
+spec:
+  storageClassName: nfs-gitlab-logs-storageclass
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - hard
+    - nfsvers=4.1    
+  nfs:
+    server: 192.168.10.37
+    path: /MotionGear/DEV_SHARED_NFS/DEV
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gitlab-logs
+spec:
+  storageClassName: nfs-gitlab-logs-storageclass
+  resources:
+    requests:
+      storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  selector:
+    matchLabels:
+      app: gitlab

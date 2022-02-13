@@ -1,0 +1,129 @@
+## Service
+kind: Service
+apiVersion: v1
+metadata:
+  name: gitlab
+  labels:
+    name: gitlab
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 31080
+      targetPort: http
+      nodePort: 31080
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: http
+      nodePort: 31443
+    - name: ssh
+      protocol: TCP
+      port: 22
+      targetPort: ssh
+      nodePort: 31022
+  selector:
+    name: gitlab
+  type: NodePort
+---
+## Deployment
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: gitlab
+  labels:
+    name: gitlab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: gitlab
+  template:
+    metadata:
+      name: gitlab
+      labels:
+        name: gitlab
+    spec:
+      containers:
+      - name: gitlab
+        image: 'gitlab/gitlab-ce:latest'
+        ports:
+        - name: ssh
+          containerPort: 22
+        - name: http
+          containerPort: 31080
+        - name: https
+          containerPort: 443
+        env:
+        - name: GITLAB_OMNIBUS_CONFIG
+          value: |
+            external_url 'http://192.168.11.10:31080'
+            gitlab_rails['time_zone'] = 'Beijing'
+            prometheus_monitoring['enable'] = false
+            gitlab_rails['smtp_enable'] = true
+            gitlab_rails['smtp_address'] = "smtp.qiye.aliyun.com"
+            gitlab_rails['smtp_port'] = 465
+            gitlab_rails['smtp_user_name'] = "hypermotion@oneprocloud.com"
+            gitlab_rails['smtp_password'] = "ec1@HyperMotionSaaS"
+            gitlab_rails['smtp_domain'] = "oneprocloud.com"
+            gitlab_rails['smtp_authentication'] = "login"
+            gitlab_rails['smtp_enable_starttls_auto'] = true
+            gitlab_rails['smtp_tls'] = true
+            gitlab_rails['gitlab_email_from'] = 'hypermotion@oneprocloud.com'
+            gitlab_rails['gitlab_email_display_name'] = 'Gitlab'
+            gitlab_rails['gitlab_email_reply_to'] = 'noreply@oneprocloud.com'
+            gitlab_rails['gitlab_email_subject_suffix'] = '[Gitlab]'
+            gitlab_rails['gitlab_shell_ssh_port'] = 31022
+            gitlab_rails['gitlab_default_projects_features_builds'] = false
+        resources: 
+          requests:
+            cpu: 4
+            memory: 8Gi
+          limits:
+            cpu: 4
+            memory: 8Gi
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 31080
+            scheme: HTTP
+          initialDelaySeconds: 300
+          timeoutSeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 31080
+            scheme: HTTP
+          initialDelaySeconds: 5
+          timeoutSeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        volumeMounts:
+        - name: gitlab-config
+          mountPath: /etc/gitlab
+          subPath: ray/gitlab/config
+        - name: gitlab-logs
+          mountPath: /var/log/gitlab
+          subPath: ray/gitlab/logs
+        - name: gitlab-data
+          mountPath: /var/opt/gitlab
+          subPath: ray/gitlab/data
+        - name: localtime
+          mountPath: /etc/localtime
+      volumes:
+      - name: gitlab-config
+        persistentVolumeClaim:
+          claimName: gitlab-config
+      - name: gitlab-logs
+        persistentVolumeClaim:
+          claimName: gitlab-logs
+      - name: gitlab-data
+        persistentVolumeClaim:
+          claimName: gitlab-data
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
