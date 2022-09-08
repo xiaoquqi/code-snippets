@@ -1,1 +1,2 @@
-db/data
+data
+conf/initdb.d/*.sql
