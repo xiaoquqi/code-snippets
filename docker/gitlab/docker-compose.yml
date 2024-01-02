@@ -4,9 +4,9 @@ gitlab:
   hostname: gitlab
   environment:
     GITLAB_OMNIBUS_CONFIG: |
-      external_url 'http://192.168.10.61:30080'
+      external_url 'http://192.168.10.61:30081'
   ports:
-    - '30080:30080'
+    - '30081:30081'
     - '10443:443'
     - '10022:22'
   volumes:

@@ -1,0 +1,9 @@
+version: '2'
+services:
+  apache:
+    image: overbridge/lyrebird
+    ports:
+      - 19090:9090
+      - 4272:4272
+    volumes:
+      - ./data:./data
