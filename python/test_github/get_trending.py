@@ -1,8 +1,9 @@
+import os
 import requests
 from datetime import datetime, timedelta
 
 # 替换为您的GitHub令牌
-token = "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"
+token = os.environ.get("GITHUB_TOKEN")
 
 # 计算一个月前的日期
 one_month_ago = datetime.now() - timedelta(days=30)

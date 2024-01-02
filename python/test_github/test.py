@@ -1,9 +1,11 @@
+import os
+
 from github import Github
 
 # Authentication is defined via github.Auth
 from github import Auth
 
-token = "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"
+token = os.environ.get("GITHUB_TOKEN")
 # using an access token
 auth = Auth.Token(token)
 
