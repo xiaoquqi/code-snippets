@@ -89,7 +89,7 @@ for project_key in project_keys:
     sprint_field_id = get_sprint_field(project_key, active_sprint.name)
     print(f"Sprint field: {sprint_field_id}")
 
-    jql_query = f'project = "{project_key}" AND fixVersion = "{active_version}" AND sprint != "{active_sprint.name}"'
+    jql_query = f'project = "{project_key}" AND fixVersion = "{active_version}" AND sprint != "{active_sprint.name}" AND issuetype not in (Sub-task, Epic)'
     print(jql_query)
 
     issues = jira.search_issues(jql_query)
