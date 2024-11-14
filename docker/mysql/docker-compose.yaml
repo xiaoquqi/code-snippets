@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql/mysql-server:8.0
+    container_name: mysql
+    env_file:
+      - ./.env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql_data/data:/var/lib/mysql
+      - ./mysql_data/etc/my.cnf:/etc/mysql/my.cnf
+      - ./mysql_data/init/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./mysql_data/logs:/var/log/mysql
+    networks:
+      - mysql_network
+    restart: always
+
+networks:
+  mysql_network:
+    driver: bridge
