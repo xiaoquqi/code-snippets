@@ -16,7 +16,7 @@ services:
     volumes:
       - ./mysql_data/data:/var/lib/mysql
       - ./mysql_data/etc/my.cnf:/etc/mysql/my.cnf
-      - ./mysql_data/init/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./mysql_data/init:/docker-entrypoint-initdb.d
       - ./mysql_data/logs:/var/log/mysql
     networks:
       - mysql_network
